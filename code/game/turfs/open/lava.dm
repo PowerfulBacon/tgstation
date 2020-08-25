@@ -44,7 +44,9 @@
 	. = ..()
 	if(isliving(Obj))
 		var/mob/living/L = Obj
-		if(!islava(newloc) && !L.on_fire)
+		if(!islava(newloc))
+			REMOVE_TRAIT(L, TRAIT_PERMANENTLY_ONFIRE, TURF_TRAIT)
+		if(!L.on_fire)
 			L.update_fire()
 
 /turf/open/lava/hitby(atom/movable/AM, skipcatch, hitpush, blocked, datum/thrownthing/throwingdatum)
@@ -88,10 +90,25 @@
 
 /turf/open/lava/TakeTemperature(temp)
 
+/turf/open/lava/attackby(obj/item/C, mob/user, params)
+	..()
+	if(istype(C, /obj/item/stack/rods/lava))
+		var/obj/item/stack/rods/lava/R = C
+		var/obj/structure/lattice/lava/H = locate(/obj/structure/lattice/lava, src)
+		if(H)
+			to_chat(user, "<span class='warning'>There is already a lattice here!</span>")
+			return
+		if(R.use(1))
+			to_chat(user, "<span class='notice'>You construct a lattice.</span>")
+			playsound(src, 'sound/weapons/genhit.ogg', 50, TRUE)
+			new /obj/structure/lattice/lava(locate(x, y, z))
+		else
+			to_chat(user, "<span class='warning'>You need one rod to build a heatproof lattice.</span>")
+		return
 
 /turf/open/lava/proc/is_safe()
 	//if anything matching this typecache is found in the lava, we don't burn things
-	var/static/list/lava_safeties_typecache = typecacheof(list(/obj/structure/lattice/catwalk, /obj/structure/stone_tile))
+	var/static/list/lava_safeties_typecache = typecacheof(list(/obj/structure/lattice/catwalk, /obj/structure/stone_tile, /obj/structure/lattice/lava))
 	var/list/found_safeties = typecache_filter_list(contents, lava_safeties_typecache)
 	for(var/obj/structure/stone_tile/S in found_safeties)
 		if(S.fallen)
@@ -141,19 +158,19 @@
 				if("lava" in live.weather_immunities)
 					continue
 
-			if(!L.on_fire)
-				L.update_fire()
-
 			if(iscarbon(L))
 				var/mob/living/carbon/C = L
-				var/obj/item/clothing/S = C.get_item_by_slot(SLOT_WEAR_SUIT)
-				var/obj/item/clothing/H = C.get_item_by_slot(SLOT_HEAD)
+				var/obj/item/clothing/S = C.get_item_by_slot(ITEM_SLOT_OCLOTHING)
+				var/obj/item/clothing/H = C.get_item_by_slot(ITEM_SLOT_HEAD)
 
 				if(S && H && S.clothing_flags & LAVAPROTECT && H.clothing_flags & LAVAPROTECT)
 					return
 
 			if("lava" in L.weather_immunities)
 				continue
+
+			ADD_TRAIT(L, TRAIT_PERMANENTLY_ONFIRE,TURF_TRAIT)
+			L.update_fire()
 
 			L.adjustFireLoss(20)
 			if(L) //mobs turning into object corpses could get deleted here.
@@ -165,8 +182,9 @@
 	baseturfs = /turf/open/lava/smooth
 	icon = 'icons/turf/floors/lava.dmi'
 	icon_state = "unsmooth"
-	smooth = SMOOTH_MORE | SMOOTH_BORDER
-	canSmoothWith = list(/turf/open/lava/smooth)
+	smoothing_flags = SMOOTH_CORNERS | SMOOTH_BORDER
+	smoothing_groups = list(SMOOTH_GROUP_TURF_OPEN, SMOOTH_GROUP_FLOOR_LAVA)
+	canSmoothWith = list(SMOOTH_GROUP_FLOOR_LAVA)
 
 /turf/open/lava/smooth/lava_land_surface
 	initial_gas_mix = LAVALAND_DEFAULT_ATMOS

@@ -1,8 +1,6 @@
 /datum/job/atmos
 	title = "Atmospheric Technician"
-	flag = ATMOSTECH
 	department_head = list("Chief Engineer")
-	department_flag = ENGSEC
 	faction = "Station"
 	total_positions = 3
 	spawn_positions = 2
@@ -19,6 +17,7 @@
 	paycheck = PAYCHECK_MEDIUM
 	paycheck_department = ACCOUNT_ENG
 	display_order = JOB_DISPLAY_ORDER_ATMOSPHERIC_TECHNICIAN
+	bounty_types = CIV_JOB_ENG
 
 /datum/outfit/job/atmos
 	name = "Atmospheric Technician"
@@ -34,8 +33,8 @@
 	satchel = /obj/item/storage/backpack/satchel/eng
 	duffelbag = /obj/item/storage/backpack/duffelbag/engineering
 	box = /obj/item/storage/box/survival/engineer
-	pda_slot = SLOT_L_STORE
-	backpack_contents = list(/obj/item/modular_computer/tablet/preset/advanced=1)
+	pda_slot = ITEM_SLOT_LPOCKET
+	backpack_contents = list(/obj/item/modular_computer/tablet/preset/advanced/atmos=1)
 
 /datum/outfit/job/atmos/rig
 	name = "Atmospheric Technician (Hardsuit)"
@@ -43,4 +42,4 @@
 	mask = /obj/item/clothing/mask/gas/atmos
 	suit = /obj/item/clothing/suit/space/hardsuit/engine/atmos
 	suit_store = /obj/item/tank/internals/oxygen
-	internals_slot = SLOT_S_STORE
+	internals_slot = ITEM_SLOT_SUITSTORE

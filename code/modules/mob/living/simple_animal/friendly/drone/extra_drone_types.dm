@@ -37,7 +37,9 @@
 	hidden_uplink.telecrystals = 10
 
 /mob/living/simple_animal/drone/syndrone/Login()
-	..()
+	. = ..()
+	if(!. || !client)
+		return FALSE
 	to_chat(src, "<span class='notice'>You can kill and eat other drones to increase your health!</span>" )
 
 /mob/living/simple_animal/drone/syndrone/badass
@@ -86,15 +88,15 @@
 /mob/living/simple_animal/drone/polymorphed/Initialize()
 	. = ..()
 	liberate()
-	visualAppearence = pick(MAINTDRONE, REPAIRDRONE, SCOUTDRONE)
-	if(visualAppearence == MAINTDRONE)
+	visualAppearance = pick(MAINTDRONE, REPAIRDRONE, SCOUTDRONE)
+	if(visualAppearance == MAINTDRONE)
 		var/colour = pick("grey", "blue", "red", "green", "pink", "orange")
-		icon_state = "[visualAppearence]_[colour]"
+		icon_state = "[visualAppearance]_[colour]"
 	else
-		icon_state = visualAppearence
+		icon_state = visualAppearance
 
 	icon_living = icon_state
-	icon_dead = "[visualAppearence]_dead"
+	icon_dead = "[visualAppearance]_dead"
 
 /obj/effect/mob_spawn/drone/derelict
 	name = "derelict drone shell"
@@ -104,9 +106,9 @@
 	mob_name = "derelict drone"
 	mob_type = /mob/living/simple_animal/drone/derelict
 	anchored = TRUE
-	flavour_text = {"
-	<b>You are a drone on Kosmicheskaya Stantsiya 13. Something has brought you out of hibernation, and the station is in gross disrepair. Build, repair, maintain and improve the station that housed you on activation.</b>
-	"}
+	short_desc = "You are a drone on Kosmicheskaya Stantsiya 13."
+	flavour_text = "Something has brought you out of hibernation, and the station is in gross disrepair."
+	important_info = "Build, repair, maintain and improve the station that housed you on activation."
 
 /mob/living/simple_animal/drone/derelict
 	name = "derelict drone"
@@ -124,3 +126,10 @@
 	"<span class='notice'>     - Interacting with non-drone players outside KS13, dead or alive.</span>\n"+\
 	"<span class='warning'>These rules are at admin discretion and will be heavily enforced.</span>\n"+\
 	"<span class='warning'><u>If you do not have the regular drone laws, follow your laws to the best of your ability.</u></span>"
+
+/mob/living/simple_animal/drone/derelict/Initialize()
+	. = ..()
+	AddComponent(/datum/component/stationstuck, PUNISHMENT_GIB, "01000110 01010101 01000011 01001011 00100000 01011001 01001111 01010101<br>WARNING: Dereliction of KS13 detected. Self-destruct activated.")
+
+
+

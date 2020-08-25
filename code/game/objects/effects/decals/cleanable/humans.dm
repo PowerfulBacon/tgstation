@@ -11,8 +11,7 @@
 /obj/effect/decal/cleanable/blood/replace_decal(obj/effect/decal/cleanable/blood/C)
 	C.add_blood_DNA(return_blood_DNA())
 	if (bloodiness)
-		if (C.bloodiness < MAX_SHOE_BLOODINESS)
-			C.bloodiness += bloodiness
+		C.bloodiness = min((C.bloodiness + bloodiness),MAX_SHOE_BLOODINESS)
 	return ..()
 
 /obj/effect/decal/cleanable/blood/old
@@ -74,8 +73,8 @@
 /obj/effect/decal/cleanable/blood/gibs/ex_act(severity, target)
 	return
 
-/obj/effect/decal/cleanable/blood/gibs/Crossed(mob/living/L)
-	if(istype(L) && has_gravity(loc))
+/obj/effect/decal/cleanable/blood/gibs/Crossed(atom/movable/L)
+	if(isliving(L) && has_gravity(loc))
 		playsound(loc, 'sound/effects/gib_step.ogg', HAS_TRAIT(L, TRAIT_LIGHT_STEP) ? 20 : 50, TRUE)
 	. = ..()
 
@@ -126,6 +125,7 @@
 	setDir(pick(1,2,4,8))
 	icon_state += "-old"
 	add_blood_DNA(list("Non-human DNA" = random_blood_type()))
+	AddElement(/datum/element/swabable, CELL_LINE_TABLE_SLUDGE, CELL_VIRUS_TABLE_GENERIC, rand(2,4), 10)
 
 /obj/effect/decal/cleanable/blood/drip
 	name = "drips of blood"

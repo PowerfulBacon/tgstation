@@ -52,6 +52,9 @@
 	LoadMOTD()
 	LoadPolicy()
 	LoadChatFilter()
+	
+	if (Master)
+		Master.OnConfigLoad()
 
 /datum/controller/configuration/proc/full_wipe()
 	if(IsAdminAdvancedProcCall())
@@ -111,13 +114,13 @@
 		if(!L)
 			continue
 
-		var/firstchar = copytext(L, 1, 2)
+		var/firstchar = L[1]
 		if(firstchar == "#")
 			continue
 
 		var/lockthis = firstchar == "@"
 		if(lockthis)
-			L = copytext(L, 2)
+			L = copytext(L, length(firstchar) + 1)
 
 		var/pos = findtext(L, " ")
 		var/entry = null
@@ -125,7 +128,7 @@
 
 		if(pos)
 			entry = lowertext(copytext(L, 1, pos))
-			value = copytext(L, pos + 1)
+			value = copytext(L, pos + length(L[pos]))
 		else
 			entry = lowertext(L)
 
@@ -291,7 +294,7 @@ Example config:
 		t = trim(t)
 		if(length(t) == 0)
 			continue
-		else if(copytext(t, 1, 2) == "#")
+		else if(t[1] == "#")
 			continue
 
 		var/pos = findtext(t, " ")
@@ -300,7 +303,7 @@ Example config:
 
 		if(pos)
 			command = lowertext(copytext(t, 1, pos))
-			data = copytext(t, pos + 1)
+			data = copytext(t, pos + length(t[pos]))
 		else
 			command = lowertext(t)
 
@@ -402,22 +405,16 @@ Example config:
 
 /datum/controller/configuration/proc/LoadChatFilter()
 	var/list/in_character_filter = list()
-
 	if(!fexists("[directory]/in_character_filter.txt"))
 		return
-
 	log_config("Loading config file in_character_filter.txt...")
-
 	for(var/line in world.file2list("[directory]/in_character_filter.txt"))
 		if(!line)
 			continue
 		if(findtextEx(line,"#",1,2))
 			continue
 		in_character_filter += REGEX_QUOTE(line)
-
 	ic_filter_regex = in_character_filter.len ? regex("\\b([jointext(in_character_filter, "|")])\\b", "i") : null
-
-	syncChatRegexes()
 
 //Message admins when you can.
 /datum/controller/configuration/proc/DelayedMessageAdmins(text)

@@ -71,7 +71,7 @@
 	icon = 'icons/obj/magic.dmi'//Needs sprites
 	icon_state = "2"
 	item_flags = NOBLUDGEON | ABSTRACT | DROPDEL
-	//item_state = null
+	//inhand_icon_state = null
 	w_class = WEIGHT_CLASS_GIGANTIC
 	layer = ABOVE_HUD_LAYER
 	plane = ABOVE_HUD_PLANE
@@ -102,7 +102,7 @@
 //stops TK grabs being equipped anywhere but into hands
 /obj/item/tk_grab/equipped(mob/user, slot)
 	. = ..()
-	if(slot == SLOT_HANDS)
+	if(slot == ITEM_SLOT_HANDS)
 		return
 	qdel(src)
 

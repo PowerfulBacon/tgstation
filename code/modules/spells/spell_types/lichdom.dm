@@ -11,7 +11,7 @@
 	clothes_req = FALSE
 	centcom_cancast = FALSE
 	invocation = "NECREM IMORTIUM!"
-	invocation_type = "shout"
+	invocation_type = INVOCATION_SHOUT
 	range = -1
 	level_max = 0 //cannot be improved
 	cooldown_min = 10
@@ -67,9 +67,9 @@
 			H.dropItemToGround(H.w_uniform)
 			H.dropItemToGround(H.wear_suit)
 			H.dropItemToGround(H.head)
-			H.equip_to_slot_or_del(new /obj/item/clothing/suit/wizrobe/black(H), SLOT_WEAR_SUIT)
-			H.equip_to_slot_or_del(new /obj/item/clothing/head/wizard/black(H), SLOT_HEAD)
-			H.equip_to_slot_or_del(new /obj/item/clothing/under/color/black(H), SLOT_W_UNIFORM)
+			H.equip_to_slot_or_del(new /obj/item/clothing/suit/wizrobe/black(H), ITEM_SLOT_OCLOTHING)
+			H.equip_to_slot_or_del(new /obj/item/clothing/head/wizard/black(H), ITEM_SLOT_HEAD)
+			H.equip_to_slot_or_del(new /obj/item/clothing/under/color/black(H), ITEM_SLOT_ICLOTHING)
 
 		// you only get one phylactery.
 		M.mind.RemoveSpell(src)
@@ -80,9 +80,10 @@
 	desc = "Stores souls. Revives liches. Also repels mosquitos."
 	icon = 'icons/obj/projectiles.dmi'
 	icon_state = "bluespace"
-	color = "#003300"
-	light_color = "#003300"
-	var/lon_range = 3
+	color = COLOR_VERY_DARK_LIME_GREEN
+	light_system = MOVABLE_LIGHT
+	light_range = 3
+	light_color = COLOR_VERY_DARK_LIME_GREEN
 	var/resurrections = 0
 	var/datum/mind/mind
 	var/respawn_time = 1800
@@ -97,7 +98,6 @@
 	active_phylacteries++
 	GLOB.poi_list |= src
 	START_PROCESSING(SSobj, src)
-	set_light(lon_range)
 	if(initial(SSticker.mode.round_ends_with_antag_death))
 		SSticker.mode.round_ends_with_antag_death = FALSE
 
@@ -128,15 +128,15 @@
 	var/mob/old_body = mind.current
 	var/mob/living/carbon/human/lich = new(item_turf)
 
-	lich.equip_to_slot_or_del(new /obj/item/clothing/shoes/sandal/magic(lich), SLOT_SHOES)
-	lich.equip_to_slot_or_del(new /obj/item/clothing/under/color/black(lich), SLOT_W_UNIFORM)
-	lich.equip_to_slot_or_del(new /obj/item/clothing/suit/wizrobe/black(lich), SLOT_WEAR_SUIT)
-	lich.equip_to_slot_or_del(new /obj/item/clothing/head/wizard/black(lich), SLOT_HEAD)
+	lich.equip_to_slot_or_del(new /obj/item/clothing/shoes/sandal/magic(lich), ITEM_SLOT_FEET)
+	lich.equip_to_slot_or_del(new /obj/item/clothing/under/color/black(lich), ITEM_SLOT_ICLOTHING)
+	lich.equip_to_slot_or_del(new /obj/item/clothing/suit/wizrobe/black(lich), ITEM_SLOT_OCLOTHING)
+	lich.equip_to_slot_or_del(new /obj/item/clothing/head/wizard/black(lich), ITEM_SLOT_HEAD)
 
 	lich.real_name = mind.name
 	mind.transfer_to(lich)
 	mind.grab_ghost(force=TRUE)
-	lich.hardset_dna(null,null,lich.real_name,null, new /datum/species/skeleton)
+	lich.hardset_dna(null,null,null,lich.real_name,null, new /datum/species/skeleton)
 	to_chat(lich, "<span class='warning'>Your bones clatter and shudder as you are pulled back into this world!</span>")
 	var/turf/body_turf = get_turf(old_body)
 	lich.Paralyze(200 + 200*resurrections)

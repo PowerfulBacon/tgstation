@@ -6,7 +6,7 @@
 	dir_in = 1 //Facing North.
 	max_integrity = 250
 	deflect_chance = 5
-	armor = list("melee" = 25, "bullet" = 20, "laser" = 30, "energy" = 15, "bomb" = 0, "bio" = 0, "rad" = 0, "fire" = 100, "acid" = 100)
+	armor = list(MELEE = 25, BULLET = 20, LASER = 30, ENERGY = 15, BOMB = 0, BIO = 0, RAD = 0, FIRE = 100, ACID = 100)
 	max_temperature = 25000
 	leg_overload_coeff = 80
 	infra_luminosity = 6
@@ -26,10 +26,11 @@
 	name = "\improper Dark Gygax"
 	icon_state = "darkgygax"
 	max_integrity = 300
-	deflect_chance = 15
-	armor = list("melee" = 40, "bullet" = 40, "laser" = 50, "energy" = 35, "bomb" = 20, "bio" = 0, "rad" =20, "fire" = 100, "acid" = 100)
+	deflect_chance = 20
+	armor = list(MELEE = 40, BULLET = 40, LASER = 50, ENERGY = 35, BOMB = 20, BIO = 0, RAD =20, FIRE = 100, ACID = 100)
 	max_temperature = 35000
 	leg_overload_coeff = 70
+	force = 30
 	operation_req_access = list(ACCESS_SYNDICATE)
 	internals_req_access = list(ACCESS_SYNDICATE)
 	wreckage = /obj/structure/mecha_wreckage/gygax/dark
@@ -40,11 +41,11 @@
 	. = ..()
 	var/obj/item/mecha_parts/mecha_equipment/ME = new /obj/item/mecha_parts/mecha_equipment/thrusters/ion(src)
 	ME.attach(src)
-	ME = new /obj/item/mecha_parts/mecha_equipment/weapon/ballistic/carbine
+	ME = new /obj/item/mecha_parts/mecha_equipment/weapon/ballistic/scattershot
 	ME.attach(src)
-	ME = new /obj/item/mecha_parts/mecha_equipment/weapon/ballistic/launcher/flashbang
+	ME = new /obj/item/mecha_parts/mecha_equipment/anticcw_armor_booster
 	ME.attach(src)
-	ME = new /obj/item/mecha_parts/mecha_equipment/teleporter
+	ME = new /obj/item/mecha_parts/mecha_equipment/antiproj_armor_booster
 	ME.attach(src)
 	ME = new /obj/item/mecha_parts/mecha_equipment/tesla_energy_relay
 	ME.attach(src)
@@ -55,7 +56,7 @@
 		C.forceMove(src)
 		cell = C
 		return
-	cell = new /obj/item/stock_parts/cell/hyper(src)
+	cell = new /obj/item/stock_parts/cell/bluespace(src)
 
 
 /obj/mecha/combat/gygax/GrantActions(mob/living/user, human_occupant = 0)

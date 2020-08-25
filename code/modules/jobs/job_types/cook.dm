@@ -1,8 +1,6 @@
 /datum/job/cook
 	title = "Cook"
-	flag = COOK
 	department_head = list("Head of Personnel")
-	department_flag = CIVILIAN
 	faction = "Station"
 	total_positions = 2
 	spawn_positions = 1
@@ -18,6 +16,7 @@
 	paycheck_department = ACCOUNT_SRV
 
 	display_order = JOB_DISPLAY_ORDER_COOK
+	bounty_types = CIV_JOB_CHEF
 
 /datum/outfit/job/cook
 	name = "Cook"
@@ -48,7 +47,7 @@
 	var/list/possible_boxes = subtypesof(/obj/item/storage/box/ingredients)
 	var/chosen_box = pick(possible_boxes)
 	var/obj/item/storage/box/I = new chosen_box(src)
-	H.equip_to_slot_or_del(I,SLOT_IN_BACKPACK)
+	H.equip_to_slot_or_del(I,ITEM_SLOT_BACKPACK)
 	var/datum/martial_art/cqc/under_siege/justacook = new
 	justacook.teach(H)
 

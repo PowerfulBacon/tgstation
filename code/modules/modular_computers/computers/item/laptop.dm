@@ -7,10 +7,12 @@
 	icon_state_powered = "laptop"
 	icon_state_unpowered = "laptop-off"
 	icon_state_menu = "menu"
+	display_overlays = FALSE
 
 	hardware_flag = PROGRAM_LAPTOP
 	max_hardware_size = 2
 	w_class = WEIGHT_CLASS_NORMAL
+	max_bays = 4
 
 	// No running around with open laptops in hands.
 	item_flags = SLOWS_WHILE_IN_HAND
@@ -32,9 +34,15 @@
 	if(start_open && !screen_on)
 		toggle_open()
 
-/obj/item/modular_computer/laptop/update_icon()
+/obj/item/modular_computer/laptop/update_icon_state()
+	if(!screen_on)
+		icon_state = icon_state_closed
+	else
+		. = ..()
+
+/obj/item/modular_computer/laptop/update_overlays()
 	if(screen_on)
-		..()
+		return ..()
 	else
 		cut_overlays()
 		icon_state = icon_state_closed
@@ -100,6 +108,7 @@
 		w_class = w_class_open
 
 	screen_on = !screen_on
+	display_overlays = screen_on
 	update_icon()
 
 

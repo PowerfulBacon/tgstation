@@ -8,7 +8,7 @@
 	idle_power_usage = 2
 	active_power_usage = 4
 	max_integrity = 300
-	armor = list("melee" = 50, "bullet" = 30, "laser" = 70, "energy" = 50, "bomb" = 20, "bio" = 0, "rad" = 0, "fire" = 100, "acid" = 70)
+	armor = list(MELEE = 50, BULLET = 30, LASER = 70, ENERGY = 50, BOMB = 20, BIO = 0, RAD = 0, FIRE = 100, ACID = 70)
 	resistance_flags = FIRE_PROOF
 	var/id = null
 	var/on = FALSE
@@ -37,7 +37,7 @@
 	update_icon()
 
 /obj/machinery/igniter/process()	//ugh why is this even in process()?
-	if (src.on && !(stat & NOPOWER) )
+	if (src.on && !(machine_stat & NOPOWER) )
 		var/turf/location = src.loc
 		if (isturf(location))
 			location.hotspot_expose(1000,500,1)
@@ -48,7 +48,7 @@
 	icon_state = "igniter[on]"
 
 /obj/machinery/igniter/update_icon_state()
-	if(stat & NOPOWER)
+	if(machine_stat & NOPOWER)
 		icon_state = "igniter0"
 	else
 		icon_state = "igniter[on]"
@@ -100,9 +100,9 @@
 		add_fingerprint(user)
 		src.disable = !src.disable
 		if (src.disable)
-			user.visible_message("<span class='notice'>[user] has disabled \the [src]!</span>", "<span class='notice'>You disable the connection to \the [src].</span>")
+			user.visible_message("<span class='notice'>[user] disables \the [src]!</span>", "<span class='notice'>You disable the connection to \the [src].</span>")
 		if (!src.disable)
-			user.visible_message("<span class='notice'>[user] has reconnected \the [src]!</span>", "<span class='notice'>You fix the connection to \the [src].</span>")
+			user.visible_message("<span class='notice'>[user] reconnects \the [src]!</span>", "<span class='notice'>You fix the connection to \the [src].</span>")
 		update_icon()
 	else
 		return ..()
@@ -134,5 +134,5 @@
 	. = ..()
 	if (. & EMP_PROTECT_SELF)
 		return
-	if(!(stat & (BROKEN|NOPOWER)))
+	if(!(machine_stat & (BROKEN|NOPOWER)))
 		ignite()

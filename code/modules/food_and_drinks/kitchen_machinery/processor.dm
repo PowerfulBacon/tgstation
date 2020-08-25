@@ -28,7 +28,7 @@
 
 /obj/machinery/processor/proc/process_food(datum/food_processor_process/recipe, atom/movable/what)
 	if (recipe.output && loc && !QDELETED(src))
-		for(var/i = 0, i < rating_amount, i++)
+		for(var/i = 0, i < (rating_amount * recipe.multiplier), i++)
 			new recipe.output(drop_location())
 	if (ismob(what))
 		var/mob/themob = what
@@ -140,7 +140,7 @@
 	empty()
 	add_fingerprint(usr)
 
-/obj/machinery/processor/container_resist(mob/living/user)
+/obj/machinery/processor/container_resist_act(mob/living/user)
 	user.forceMove(drop_location())
 	user.visible_message("<span class='notice'>[user] crawls free of the processor!</span>")
 

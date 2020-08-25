@@ -1,8 +1,6 @@
 /datum/job/janitor
 	title = "Janitor"
-	flag = JANITOR
 	department_head = list("Head of Personnel")
-	department_flag = CIVILIAN
 	faction = "Station"
 	total_positions = 2
 	spawn_positions = 1
@@ -26,3 +24,9 @@
 	ears = /obj/item/radio/headset/headset_srv
 	uniform = /obj/item/clothing/under/rank/civilian/janitor
 	backpack_contents = list(/obj/item/modular_computer/tablet/preset/advanced=1)
+
+/datum/outfit/job/janitor/pre_equip(mob/living/carbon/human/H, visualsOnly)
+	. = ..()
+	if(GARBAGEDAY in SSevents.holidays)
+		backpack_contents += /obj/item/gun/ballistic/revolver
+		r_pocket = /obj/item/ammo_box/a357

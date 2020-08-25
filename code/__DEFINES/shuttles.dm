@@ -1,8 +1,8 @@
 //shuttle mode defines
 #define SHUTTLE_IDLE		"idle"
 #define SHUTTLE_IGNITING	"igniting"
-#define SHUTTLE_RECALL		"recall"
-#define SHUTTLE_CALL		"call"
+#define SHUTTLE_RECALL		"recalled"
+#define SHUTTLE_CALL		"called"
 #define SHUTTLE_DOCKED		"docked"
 #define SHUTTLE_STRANDED	"stranded"
 #define SHUTTLE_ESCAPE		"escape"
@@ -30,6 +30,11 @@
 #define ENDGAME_LAUNCHED 1
 #define EARLY_LAUNCHED 2
 #define ENDGAME_TRANSIT 3
+
+//positive value = cannot puchase
+#define SHUTTLEPURCHASE_PURCHASABLE 0 //station can buy a shuttle
+#define SHUTTLEPURCHASE_PURCHASED 1 //station has already bought a shuttle, so cannot
+#define SHUTTLEPURCHASE_FORCED 2 //station was given a new shuttle through events or other shenanigans
 
 // Ripples, effects that signal a shuttle's arrival
 #define SHUTTLE_RIPPLE_TIME 100

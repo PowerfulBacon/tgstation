@@ -8,6 +8,7 @@
 	icon_state = "crawling"
 	icon_living = "crawling"
 	icon_dead = "dead"
+	health_doll_icon = "crawling"
 	mob_biotypes = MOB_ORGANIC|MOB_HUMANOID
 	speak_chance = 80
 	maxHealth = 220
@@ -34,7 +35,7 @@
 	possible_a_intents = list(INTENT_HELP, INTENT_GRAB, INTENT_DISARM, INTENT_HARM)
 	faction = list("jungle")
 	robust_searching = TRUE
-	stat_attack = UNCONSCIOUS
+	stat_attack = HARD_CRIT
 	minbodytemp = 270
 	maxbodytemp = 350
 	unique_name = TRUE

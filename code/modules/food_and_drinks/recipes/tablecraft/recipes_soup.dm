@@ -8,7 +8,7 @@
 	reqs = list(
 		/datum/reagent/water = 10,
 		/obj/item/reagent_containers/glass/bowl = 1,
-		/obj/item/reagent_containers/food/snacks/faggot = 1,
+		/obj/item/reagent_containers/food/snacks/meatball = 1,
 		/obj/item/reagent_containers/food/snacks/grown/carrot = 1,
 		/obj/item/reagent_containers/food/snacks/grown/potato = 1
 	)
@@ -81,6 +81,18 @@
 	result = /obj/item/reagent_containers/food/snacks/soup/coldchili
 	subcategory = CAT_SOUP
 
+/datum/crafting_recipe/food/clownchili
+	name = "Chili con carnival"
+	reqs = list(
+		/obj/item/reagent_containers/glass/bowl = 1,
+		/obj/item/reagent_containers/food/snacks/meat/cutlet = 2,
+		/obj/item/reagent_containers/food/snacks/grown/chili = 1,
+		/obj/item/reagent_containers/food/snacks/grown/tomato = 1,
+		/obj/item/clothing/shoes/clown_shoes = 1
+	)
+	result = /obj/item/reagent_containers/food/snacks/soup/clownchili
+	subcategory = CAT_SOUP
+
 /datum/crafting_recipe/food/tomatosoup
 	name = "Tomato soup"
 	reqs = list(
@@ -140,7 +152,7 @@
 		/datum/reagent/water = 10,
 		/obj/item/reagent_containers/glass/bowl = 1,
 		/obj/item/reagent_containers/food/snacks/grown/banana = 1,
-		/obj/item/stack/ore/bananium = 1
+		/obj/item/stack/sheet/mineral/bananium = 1
 	)
 	result = /obj/item/reagent_containers/food/snacks/soup/clownstears
 	subcategory = CAT_SOUP
