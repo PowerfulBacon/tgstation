@@ -17,11 +17,10 @@ const INDEXED_DB_STORE_NAME = 'storage-v1';
 const READ_ONLY = 'readonly';
 const READ_WRITE = 'readwrite';
 
-const testGeneric = testFn => () => {
+const testGeneric = (testFn) => () => {
   try {
     return Boolean(testFn());
-  }
-  catch {
+  } catch {
     return false;
   }
 };
@@ -29,10 +28,12 @@ const testGeneric = testFn => () => {
 // Localstorage can sometimes throw an error, even if DOM storage is not
 // disabled in IE11 settings.
 // See: https://superuser.com/questions/1080011
+// prettier-ignore
 const testLocalStorage = testGeneric(() => (
   window.localStorage && window.localStorage.getItem
 ));
 
+// prettier-ignore
 const testIndexedDb = testGeneric(() => (
   (window.indexedDB || window.msIndexedDB)
   && (window.IDBTransaction || window.msIDBTransaction)
@@ -44,19 +45,19 @@ class MemoryBackend {
     this.store = {};
   }
 
-  async get(key) {
+  get(key) {
     return this.store[key];
   }
 
-  async set(key, value) {
+  set(key, value) {
     this.store[key] = value;
   }
 
-  async remove(key) {
+  remove(key) {
     this.store[key] = undefined;
   }
 
-  async clear() {
+  clear() {
     this.store = {};
   }
 }
@@ -64,25 +65,24 @@ class MemoryBackend {
 class LocalStorageBackend {
   constructor() {
     this.impl = IMPL_LOCAL_STORAGE;
-    this.store = {};
   }
 
-  async get(key) {
+  get(key) {
     const value = localStorage.getItem(key);
     if (typeof value === 'string') {
       return JSON.parse(value);
     }
   }
 
-  async set(key, value) {
+  set(key, value) {
     localStorage.setItem(key, JSON.stringify(value));
   }
 
-  async remove(key) {
+  remove(key) {
     localStorage.removeItem(key);
   }
 
-  async clear() {
+  clear() {
     localStorage.clear();
   }
 }
@@ -97,8 +97,7 @@ class IndexedDbBackend {
       req.onupgradeneeded = () => {
         try {
           req.result.createObjectStore(INDEXED_DB_STORE_NAME);
-        }
-        catch (err) {
+        } catch (err) {
           reject(new Error('Failed to upgrade IDB: ' + req.error));
         }
       };
@@ -110,7 +109,8 @@ class IndexedDbBackend {
   }
 
   getStore(mode) {
-    return this.dbPromise.then(db => db
+    // prettier-ignore
+    return this.dbPromise.then((db) => db
       .transaction(INDEXED_DB_STORE_NAME, mode)
       .objectStore(INDEXED_DB_STORE_NAME));
   }
@@ -150,8 +150,46 @@ class IndexedDbBackend {
   }
 }
 
-export const storage = (
-  testIndexedDb() && new IndexedDbBackend()
-  || testLocalStorage() && new LocalStorageBackend()
-  || new MemoryBackend()
-);
+/**
+ * Web Storage Proxy object, which selects the best backend available
+ * depending on the environment.
+ */
+class StorageProxy {
+  constructor() {
+    this.backendPromise = (async () => {
+      if (testIndexedDb()) {
+        try {
+          const backend = new IndexedDbBackend();
+          await backend.dbPromise;
+          return backend;
+        } catch {}
+      }
+      if (testLocalStorage()) {
+        return new LocalStorageBackend();
+      }
+      return new MemoryBackend();
+    })();
+  }
+
+  async get(key) {
+    const backend = await this.backendPromise;
+    return backend.get(key);
+  }
+
+  async set(key, value) {
+    const backend = await this.backendPromise;
+    return backend.set(key, value);
+  }
+
+  async remove(key) {
+    const backend = await this.backendPromise;
+    return backend.remove(key);
+  }
+
+  async clear() {
+    const backend = await this.backendPromise;
+    return backend.clear();
+  }
+}
+
+export const storage = new StorageProxy();

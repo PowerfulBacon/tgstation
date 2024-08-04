@@ -8,6 +8,9 @@
 	var/clusterCheckFlags = CLUSTER_CHECK_SAME_ATOMS
 	var/allowAtomsOnSpace = FALSE
 
+/datum/map_generator_module/Destroy(force)
+	mother = null
+	return ..()
 
 //Syncs the module up with its mother
 /datum/map_generator_module/proc/sync(datum/map_generator/mum)
@@ -105,17 +108,16 @@
 
 //Checks and Rejects dense turfs
 /datum/map_generator_module/proc/checkPlaceAtom(turf/T)
-	. = 1
-	if(!T)
-		return 0
+	if(!T || (T.turf_flags & TURF_BLOCKS_POPULATE_TERRAIN_FLORAFEATURES))
+		return FALSE
 	if(T.density)
-		. = 0
+		return FALSE
 	for(var/atom/A in T)
 		if(A.density)
-			. = 0
-			break
+			return FALSE
 	if(!allowAtomsOnSpace && (isspaceturf(T)))
-		. = 0
+		return FALSE
+	return TRUE
 
 
 ///////////////////////////////////////////////////////////
